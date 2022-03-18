@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class PlayerService {
@@ -38,7 +39,14 @@ public class PlayerService {
         return repository.findByClub(club).map(appUtils::entityToDto);
     }
 
-    public Flux<DtoPlayer> getNacionalidades(){
-        return repository.findAll().filter((Player a, Player b) -> { pl})
+    public Flux<List<DtoPlayer>> getNacionalidades(){
+        return repository
+                .findAll()
+                .map(appUtils::entityToDto)
+                .buffer(120)
+                .flatMap(jugador -> Flux.fromStream(jugador.parallelStream()))
+                .distinct().groupBy(DtoPlayer::getNacionalidad)
+                .flatMap(Flux::collectList).map(lista ->
+                {lista.sort(Comparator.comparingDouble(DtoPlayer::getRanking));return lista; });
     }
 }

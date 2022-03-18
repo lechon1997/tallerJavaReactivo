@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.DtoPlayer;
+import com.example.demo.entity.Player;
 import com.example.demo.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -24,10 +27,12 @@ public class PlayerController {
     public Flux<DtoPlayer> getPlayersMayores(@PathVariable Integer edad){
         return service.getPlayerMayores(edad);
     }
+
     @GetMapping("/nacionalidad")
-    public Flux<DtoPlayer> getNacionalidades(){
+    public Flux<List<DtoPlayer>> getNacionalidades(){
         return service.getNacionalidades();
     }
+
     @GetMapping("/nacionalidad/{nacionalidad}")
     public Flux<DtoPlayer> getPorNacionalidad(@PathVariable String nacionalidad){
         return service.getPorNacionalidad(nacionalidad);
